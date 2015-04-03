@@ -16,6 +16,8 @@ import java.util.List;
 import cz.eman.infinitescroll.R;
 import cz.eman.infinitescroll.model.RestClient;
 import cz.eman.infinitescroll.model.entity.Movie;
+import cz.eman.infinitescroll.model.entity.RestError;
+import cz.eman.infinitescroll.model.rest.RestCallback;
 import cz.eman.infinitescroll.model.service.MovieService;
 import cz.eman.infinitescroll.ui.adapter.MovieAdapter;
 import retrofit.Callback;
@@ -56,8 +58,8 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //getListView().setOnScrollListener(this);
-        loadData(1);
+        getListView().setOnScrollListener(this);
+        loadData(currentPage);
     }
 
     @Override
@@ -72,19 +74,18 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
     }
 
     private void loadData(int currentPage) {
-        movieService.getMovies(currentPage, 5, new Callback<List<Movie>>() {
+        movieService.getMovies(currentPage, 5, new RestCallback<List<Movie>>() {
             @Override
             public void success(List<Movie> movies, Response response) {
+                Log.d("APP", "Loaded movies " + movies);
                 Log.d("APP", "Loaded " + movies.size());
                 for (Movie m : movies) adapter.add(m);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.d("APP", "Error "+error);
-                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                Log.d("APP", "HTTP response body "+json);
+            public void failure(RestError error) {
+                Log.d("APP", "Error "+error.getError());
                 Toast.makeText(context,
                         getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
                         .show();

@@ -28,8 +28,7 @@ public class MovieTypeAdapterFactory implements TypeAdapterFactory {
                 JsonElement jsonElement = elementAdapter.read(in);
                 if (jsonElement.isJsonObject()) {
                     JsonObject jsonRoot = jsonElement.getAsJsonObject();
-                    if (jsonRoot.has("movies") && jsonRoot.get("movies").isJsonArray())
-                    {
+                    if (jsonRoot.has("movies") && jsonRoot.get("movies").isJsonArray()) {
                         jsonElement = jsonRoot.get("movies");
                     }
                 }

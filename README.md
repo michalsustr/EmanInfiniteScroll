@@ -27,3 +27,14 @@ Parametry aplikace:
 -------------------
 Aplikace by měla být buildována s targetSDK nastaveno na nejnovější verzi a minSDK nastaveno na 10.
 
+Riešenie
+========
+
+Známe nedostatky:
+-----------------
+- Pri nesprávnom parametri page (napr. = 0) sa nespracuje správne chyba vrátená serverom, pretože je iba určená ako error,
+a je zle nastavený HTTP STATUS (nemá byť kód 200 OK pri chybe!).
+   
+  Dá sa to riešiť vlastným registerTypeAdapterFactory pre gson, ale je to trochu oser.
+
+- 
