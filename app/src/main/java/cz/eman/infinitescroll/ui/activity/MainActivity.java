@@ -1,20 +1,30 @@
 package cz.eman.infinitescroll.ui.activity;
 
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.Toast;
+
+import java.util.List;
 
 import cz.eman.infinitescroll.R;
+import cz.eman.infinitescroll.model.RestClient;
+import cz.eman.infinitescroll.model.entity.Movie;
+import cz.eman.infinitescroll.model.service.MovieService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends ActionBarActivity {
+    RestClient restClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +35,25 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        restClient = new RestClient();
+        MovieService movieService = restClient.getMovieService();
+        movieService.getMovies(1, 5, new Callback<List<Movie>>() {
+            @Override
+            public void success(List<Movie> movies, Response response) {
+                Log.d("APP", "Loaded "+movies.size());
+                for (Movie m : movies) {
+                    Log.d("APP", "title "+m.getTitle());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
 
@@ -65,4 +94,7 @@ public class MainActivity extends ActionBarActivity {
             return rootView;
         }
     }
+
+
+
 }
