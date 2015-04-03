@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
     private MovieService movieService;
     private MovieAdapter adapter;
     private Context context;
+    private View loadingView;
     private int threshold = 0;
 
     public ScrollViewFragment() {
@@ -42,12 +45,12 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.fragment_scrollview, container, false);
+        View view = inflater.inflate(R.layout.view_loadingprogress, null);
+        loadingView = view.findViewById(R.id.footer);
 
         context = container.getContext();
 
         adapter = new MovieAdapter(context);
-        setListAdapter(adapter);
-
         restClient = new RestClient();
         movieService = restClient.getMovieService();
 
@@ -58,6 +61,8 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getListView().addFooterView(loadingView);
+        setListAdapter(adapter);
         getListView().setOnScrollListener(this);
         loadData(currentPage);
     }
@@ -74,6 +79,8 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
     }
 
     private void loadData(int currentPage) {
+        showLoading();
+
         movieService.getMovies(currentPage, 5, new RestCallback<List<Movie>>() {
             @Override
             public void success(List<Movie> movies, Response response) {
@@ -81,6 +88,8 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
                 Log.d("APP", "Loaded " + movies.size());
                 for (Movie m : movies) adapter.add(m);
                 adapter.notifyDataSetChanged();
+
+                hideLoading();
             }
 
             @Override
@@ -89,8 +98,26 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
                 Toast.makeText(context,
                         getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
                         .show();
+                getListView().removeFooterView(loadingView);
+
+                hideLoading();
             }
         });
+    }
+
+    // for such a simple thing we need locking ... omg
+    private volatile boolean showsLoading = false;
+    private synchronized void showLoading() {
+        if(!showsLoading) {
+            showsLoading = true;
+            getListView().addFooterView(loadingView);
+        }
+    }
+    private synchronized void hideLoading() {
+        if(showsLoading) {
+            showsLoading = false;
+            getListView().removeFooterView(loadingView);
+        }
     }
 
     @Override
