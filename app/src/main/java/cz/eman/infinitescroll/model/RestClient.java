@@ -24,6 +24,7 @@ public class RestClient {
 
         mRestAdapter = new RestAdapter.Builder()
             .setEndpoint(BASE_URL)
+            .setLogLevel(RestAdapter.LogLevel.FULL)
             .setRequestInterceptor(new RequestInterceptor() {
                 @Override
                 public void intercept(RequestFacade request) {

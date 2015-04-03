@@ -1,5 +1,7 @@
 package cz.eman.infinitescroll.model.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Movie {
@@ -7,6 +9,7 @@ public class Movie {
     private String title;
     private Integer year;
     private String synopsis;
+    @SerializedName("abridged_cast")
     private List<CastMember> cast;
 
     public Integer getId() {

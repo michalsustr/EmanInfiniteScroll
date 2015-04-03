@@ -1,59 +1,25 @@
 package cz.eman.infinitescroll.ui.activity;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import java.util.List;
 
 import cz.eman.infinitescroll.R;
 import cz.eman.infinitescroll.model.RestClient;
-import cz.eman.infinitescroll.model.entity.Movie;
-import cz.eman.infinitescroll.model.service.MovieService;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import cz.eman.infinitescroll.ui.fragment.ScrollViewFragment;
 
 
 public class MainActivity extends ActionBarActivity {
-    RestClient restClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new ScrollViewFragment())
                     .commit();
         }
-
-        restClient = new RestClient();
-        MovieService movieService = restClient.getMovieService();
-        movieService.getMovies(1, 5, new Callback<List<Movie>>() {
-            @Override
-            public void success(List<Movie> movies, Response response) {
-                Log.d("APP", "Loaded "+movies.size());
-                for (Movie m : movies) {
-                    Log.d("APP", "title "+m.getTitle());
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
-                        .show();
-            }
-        });
     }
 
 
@@ -78,23 +44,4 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-    }
-
-
-
 }
