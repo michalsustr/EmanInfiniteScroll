@@ -12,29 +12,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 import cz.eman.infinitescroll.R;
 import cz.eman.infinitescroll.model.RestClient;
 import cz.eman.infinitescroll.model.entity.Movie;
 import cz.eman.infinitescroll.model.entity.RestError;
+import cz.eman.infinitescroll.model.rest.API;
 import cz.eman.infinitescroll.model.rest.RestCallback;
 import cz.eman.infinitescroll.model.service.MovieService;
 import cz.eman.infinitescroll.ui.activity.MovieDetail;
 import cz.eman.infinitescroll.ui.adapter.MovieAdapter;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 public class MovieInfiniteListFragment extends ListFragment
         implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     private int currentPage = 1;
+    private int totalRecords;
+
     private RestClient restClient;
     private MovieService movieService;
     private MovieAdapter adapter;
@@ -42,6 +39,9 @@ public class MovieInfiniteListFragment extends ListFragment
     private int threshold = 0;
     private View loadingView;
     private TextView descriptionView;
+    private TextView nomoreDataView;
+    private TextView loadDataView;
+
 
     public MovieInfiniteListFragment() {
     }
@@ -52,12 +52,17 @@ public class MovieInfiniteListFragment extends ListFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.fragment_scrollview, container, false);
-        View footerView = inflater.inflate(R.layout.view_loadingprogress, null);
-        loadingView = footerView.findViewById(R.id.footer);
 
-        View headerView = inflater.inflate(R.layout.view_information, null);
-        descriptionView = (TextView) headerView.findViewById(R.id.header);
+        loadingView = inflater.inflate(R.layout.view_loadingprogress, null)
+                .findViewById(R.id.footer);
+        loadDataView = (TextView) inflater.inflate(R.layout.view_loaddata, null)
+                .findViewById(R.id.footer);
+        loadDataView.setOnClickListener(onLoadButtonClick);
+        descriptionView = (TextView) inflater.inflate(R.layout.view_information, null)
+                .findViewById(R.id.header);
         descriptionView.setText(Html.fromHtml(getString(R.string.about_info)));
+        nomoreDataView = (TextView) inflater.inflate(R.layout.view_nomoredata, null)
+                .findViewById(R.id.header);;
 
         context = container.getContext();
 
@@ -80,26 +85,36 @@ public class MovieInfiniteListFragment extends ListFragment
         loadData(currentPage);
     }
 
+    private View.OnClickListener onLoadButtonClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            loadNextPage();
+        }
+    };
+
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         if (scrollState == SCROLL_STATE_IDLE) {
             if (getListView().getLastVisiblePosition() >= getListView().getCount() - 1 - threshold) {
-                currentPage++;
-                //load more list items:
-                loadData(currentPage);
+                loadNextPage();
             }
         }
+    }
+
+    private void loadNextPage() {
+        currentPage++;
+        loadData(currentPage);
     }
 
     private void loadData(int currentPage) {
         showLoading();
 
-        movieService.getMovies(currentPage, 5, new RestCallback<List<Movie>>() {
+        movieService.getMovies(currentPage, 3, new RestCallback<API>() {
             @Override
-            public void success(List<Movie> movies, Response response) {
-                Log.d("APP", "Loaded movies " + movies);
-                Log.d("APP", "Loaded " + movies.size());
-                for (Movie m : movies) adapter.add(m);
+            public void success(API api, Response response) {
+                Log.d("APP", "Loaded movies " + api.getMovies());
+                Log.d("APP", "Loaded " + api.getMovies().size());
+                for (Movie m : api.getMovies()) adapter.add(m);
                 adapter.notifyDataSetChanged();
 
                 hideLoading();
@@ -124,12 +139,14 @@ public class MovieInfiniteListFragment extends ListFragment
         if(!showsLoading) {
             showsLoading = true;
             getListView().addFooterView(loadingView);
+            getListView().removeFooterView(loadDataView);
         }
     }
     private synchronized void hideLoading() {
         if(showsLoading) {
             showsLoading = false;
             getListView().removeFooterView(loadingView);
+            getListView().addFooterView(loadDataView);
         }
     }
 
