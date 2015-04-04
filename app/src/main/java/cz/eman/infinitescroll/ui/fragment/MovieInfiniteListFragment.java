@@ -30,17 +30,18 @@ public class MovieInfiniteListFragment extends ListFragment
         implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     private int currentPage = 1;
-    private int totalRecords;
+    private int itemsPerPage = 5;
+    private int totalPages;
 
     private RestClient restClient;
     private MovieService movieService;
     private MovieAdapter adapter;
     private Context context;
     private int threshold = 0;
-    private View loadingView;
+    private View loadProgressView;
     private TextView descriptionView;
     private TextView nomoreDataView;
-    private TextView loadDataView;
+    private TextView loadButtonView;
 
 
     public MovieInfiniteListFragment() {
@@ -53,16 +54,17 @@ public class MovieInfiniteListFragment extends ListFragment
 
         View rootView = inflater.inflate(R.layout.fragment_scrollview, container, false);
 
-        loadingView = inflater.inflate(R.layout.view_loadingprogress, null)
-                .findViewById(R.id.footer);
-        loadDataView = (TextView) inflater.inflate(R.layout.view_loaddata, null)
-                .findViewById(R.id.footer);
-        loadDataView.setOnClickListener(onLoadButtonClick);
         descriptionView = (TextView) inflater.inflate(R.layout.view_information, null)
                 .findViewById(R.id.header);
         descriptionView.setText(Html.fromHtml(getString(R.string.about_info)));
+
+        loadProgressView = inflater.inflate(R.layout.view_loadingprogress, null)
+                .findViewById(R.id.footer);
+        loadButtonView = (TextView) inflater.inflate(R.layout.view_loaddata, null)
+                .findViewById(R.id.footer);
+        loadButtonView.setOnClickListener(onLoadButtonClick);
         nomoreDataView = (TextView) inflater.inflate(R.layout.view_nomoredata, null)
-                .findViewById(R.id.header);;
+                .findViewById(R.id.footer);
 
         context = container.getContext();
 
@@ -77,8 +79,9 @@ public class MovieInfiniteListFragment extends ListFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getListView().addFooterView(loadingView);
         getListView().addHeaderView(descriptionView);
+        getListView().addFooterView(loadProgressView);
+        showingProgress = true;
         setListAdapter(adapter);
         getListView().setOnScrollListener(this);
         getListView().setOnItemClickListener(this);
@@ -102,22 +105,33 @@ public class MovieInfiniteListFragment extends ListFragment
     }
 
     private void loadNextPage() {
-        currentPage++;
-        loadData(currentPage);
+        // load next if possible
+        if(currentPage < totalPages) {
+            currentPage++;
+            loadData(currentPage);
+        }
     }
 
     private void loadData(int currentPage) {
         showLoading();
 
-        movieService.getMovies(currentPage, 3, new RestCallback<API>() {
+        movieService.getMovies(currentPage, itemsPerPage, new RestCallback<API>() {
             @Override
             public void success(API api, Response response) {
                 Log.d("APP", "Loaded movies " + api.getMovies());
                 Log.d("APP", "Loaded " + api.getMovies().size());
+
+                // update number of total pages
+                totalPages = api.getTotal() / itemsPerPage;
+                // handle integer rounding proble
+                if(api.getTotal() > totalPages*itemsPerPage) {
+                    totalPages++;
+                }
+
                 for (Movie m : api.getMovies()) adapter.add(m);
                 adapter.notifyDataSetChanged();
 
-                hideLoading();
+                doneLoading();
             }
 
             @Override
@@ -126,27 +140,38 @@ public class MovieInfiniteListFragment extends ListFragment
                 Toast.makeText(context,
                         getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
                         .show();
-                getListView().removeFooterView(loadingView);
+                getListView().removeFooterView(loadProgressView);
 
-                hideLoading();
+                doneLoading();
             }
         });
     }
 
     // for such a simple thing we need locking ... omg
-    private volatile boolean showsLoading = false;
+    private volatile boolean showingProgress   = false;
+    private volatile boolean showingLoadButton = false;
+    private volatile boolean showingNoMoreData = false;
     private synchronized void showLoading() {
-        if(!showsLoading) {
-            showsLoading = true;
-            getListView().addFooterView(loadingView);
-            getListView().removeFooterView(loadDataView);
+        if(showingLoadButton) {
+            getListView().removeFooterView(loadButtonView);
+            showingLoadButton = false;
         }
+
+        getListView().addFooterView(loadProgressView);
+        showingProgress = true;
     }
-    private synchronized void hideLoading() {
-        if(showsLoading) {
-            showsLoading = false;
-            getListView().removeFooterView(loadingView);
-            getListView().addFooterView(loadDataView);
+    private synchronized void doneLoading() {
+        if(showingProgress) {
+            getListView().removeFooterView(loadProgressView);
+            showingProgress = false;
+        }
+
+        if(currentPage == totalPages) {
+            getListView().addFooterView(nomoreDataView);
+            showingNoMoreData = true;
+        } else {
+            getListView().addFooterView(loadButtonView);
+            showingLoadButton = true;
         }
     }
 
