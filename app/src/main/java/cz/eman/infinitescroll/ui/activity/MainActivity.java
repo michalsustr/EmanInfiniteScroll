@@ -6,19 +6,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import cz.eman.infinitescroll.R;
+import cz.eman.infinitescroll.ui.fragment.MovieDetailFragment;
 import cz.eman.infinitescroll.ui.fragment.MovieInfiniteListFragment;
 
 
 public class MainActivity extends ActionBarActivity {
+    private MovieDetailFragment movieDetailFragment;
+    private MovieInfiniteListFragment movieInfiniteListFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MovieInfiniteListFragment())
-                    .commit();
-        }
     }
 
 
@@ -37,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_offline) {
             return true;
         }
 

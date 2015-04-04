@@ -1,6 +1,5 @@
 package cz.eman.infinitescroll.ui.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +21,7 @@ import cz.eman.infinitescroll.model.entity.RestError;
 import cz.eman.infinitescroll.model.rest.API;
 import cz.eman.infinitescroll.model.rest.RestCallback;
 import cz.eman.infinitescroll.model.service.MovieService;
-import cz.eman.infinitescroll.ui.activity.MovieDetail;
+import cz.eman.infinitescroll.ui.activity.MovieDetailActivity;
 import cz.eman.infinitescroll.ui.adapter.MovieAdapter;
 import retrofit.client.Response;
 
@@ -36,7 +35,6 @@ public class MovieInfiniteListFragment extends ListFragment
     private RestClient restClient;
     private MovieService movieService;
     private MovieAdapter adapter;
-    private Context context;
     private int threshold = 0;
     private View loadProgressView;
     private TextView descriptionView;
@@ -66,9 +64,6 @@ public class MovieInfiniteListFragment extends ListFragment
         nomoreDataView = (TextView) inflater.inflate(R.layout.view_nomoredata, null)
                 .findViewById(R.id.footer);
 
-        context = container.getContext();
-
-        adapter = new MovieAdapter(context);
         restClient = new RestClient();
         movieService = restClient.getMovieService();
 
@@ -82,6 +77,7 @@ public class MovieInfiniteListFragment extends ListFragment
         getListView().addHeaderView(descriptionView);
         getListView().addFooterView(loadProgressView);
         showingProgress = true;
+        adapter = new MovieAdapter(getActivity().getApplicationContext());
         setListAdapter(adapter);
         getListView().setOnScrollListener(this);
         getListView().setOnItemClickListener(this);
@@ -137,7 +133,7 @@ public class MovieInfiniteListFragment extends ListFragment
             @Override
             public void failure(RestError error) {
                 Log.d("APP", "Error "+error.getError());
-                Toast.makeText(context,
+                Toast.makeText(getActivity().getApplicationContext(),
                         getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
                         .show();
                 getListView().removeFooterView(loadProgressView);
@@ -180,8 +176,16 @@ public class MovieInfiniteListFragment extends ListFragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), MovieDetail.class);
-        intent.putExtra(MovieDetail.EXTRA_MOVIE_ID, adapter.getItem(position).getId());
-        startActivity(intent);
+        MovieDetailFragment detailFragment = (MovieDetailFragment) getFragmentManager()
+                .findFragmentById(R.id.detailFragment);
+        Integer movieId = adapter.getItem(position).getId();
+
+        if (detailFragment == null) {
+            Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+            intent.putExtra(MovieDetailActivity.EXTRA_MOVIE_ID, movieId);
+            startActivity(intent);
+        } else {
+            detailFragment.showMovie(movieId);
+        }
     }
 }
