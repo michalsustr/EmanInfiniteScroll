@@ -3,7 +3,7 @@ package cz.eman.infinitescroll.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cz.eman.infinitescroll.model.service.MovieService;
+import cz.eman.infinitescroll.model.service.MovieRestService;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -14,7 +14,7 @@ public class RestClient {
     private static final String COUNTRY = "us";
 
     private RestAdapter mRestAdapter;
-    private MovieService mMovieService;
+    private MovieRestService mMovieRestService;
 
     public RestClient() {
         Gson gson = new GsonBuilder()
@@ -36,10 +36,10 @@ public class RestClient {
 
     }
 
-    public MovieService getMovieService() {
-        if(mMovieService == null) {
-            mMovieService = mRestAdapter.create(MovieService.class);
+    public MovieRestService getMovieService() {
+        if(mMovieRestService == null) {
+            mMovieRestService = mRestAdapter.create(MovieRestService.class);
         }
-        return mMovieService;
+        return mMovieRestService;
     }
 }

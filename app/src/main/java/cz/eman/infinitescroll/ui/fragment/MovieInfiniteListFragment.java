@@ -20,7 +20,7 @@ import cz.eman.infinitescroll.model.entity.Movie;
 import cz.eman.infinitescroll.model.entity.RestError;
 import cz.eman.infinitescroll.model.rest.API;
 import cz.eman.infinitescroll.model.rest.RestCallback;
-import cz.eman.infinitescroll.model.service.MovieService;
+import cz.eman.infinitescroll.model.service.MovieRestService;
 import cz.eman.infinitescroll.ui.activity.MovieDetailActivity;
 import cz.eman.infinitescroll.ui.adapter.MovieAdapter;
 import retrofit.client.Response;
@@ -33,7 +33,7 @@ public class MovieInfiniteListFragment extends ListFragment
     private int totalPages;
 
     private RestClient restClient;
-    private MovieService movieService;
+    private MovieRestService movieRestService;
     private MovieAdapter adapter;
     private int threshold = 0;
     private View loadProgressView;
@@ -65,7 +65,7 @@ public class MovieInfiniteListFragment extends ListFragment
                 .findViewById(R.id.footer);
 
         restClient = new RestClient();
-        movieService = restClient.getMovieService();
+        movieRestService = restClient.getMovieService();
 
         return rootView;
     }
@@ -111,7 +111,7 @@ public class MovieInfiniteListFragment extends ListFragment
     private void loadData(int currentPage) {
         showLoading();
 
-        movieService.getMovies(currentPage, itemsPerPage, new RestCallback<API>() {
+        movieRestService.getMovies(currentPage, itemsPerPage, new RestCallback<API>() {
             @Override
             public void success(API api, Response response) {
                 Log.d("APP", "Loaded movies " + api.getMovies());
@@ -124,7 +124,10 @@ public class MovieInfiniteListFragment extends ListFragment
                     totalPages++;
                 }
 
-                for (Movie m : api.getMovies()) adapter.add(m);
+                for (Movie m : api.getMovies()) {
+                    adapter.add(m);
+                    m.save();
+                }
                 adapter.notifyDataSetChanged();
 
                 doneLoading();
@@ -178,7 +181,7 @@ public class MovieInfiniteListFragment extends ListFragment
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MovieDetailFragment detailFragment = (MovieDetailFragment) getFragmentManager()
                 .findFragmentById(R.id.detailFragment);
-        Integer movieId = adapter.getItem(position).getId();
+        Integer movieId = adapter.getItem(position-1).getSid();
 
         if (detailFragment == null) {
             Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
