@@ -14,12 +14,15 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import cz.eman.infinitescroll.R;
 import cz.eman.infinitescroll.model.RestClient;
 import cz.eman.infinitescroll.model.entity.Movie;
 import cz.eman.infinitescroll.model.entity.RestError;
 import cz.eman.infinitescroll.model.rest.API;
 import cz.eman.infinitescroll.model.rest.RestCallback;
+import cz.eman.infinitescroll.model.service.MovieDbService;
 import cz.eman.infinitescroll.model.service.MovieRestService;
 import cz.eman.infinitescroll.ui.activity.MovieDetailActivity;
 import cz.eman.infinitescroll.ui.adapter.MovieAdapter;
@@ -50,7 +53,7 @@ public class MovieInfiniteListFragment extends ListFragment
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_scrollview, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_movie_infinite_list, container, false);
 
         descriptionView = (TextView) inflater.inflate(R.layout.view_information, null)
                 .findViewById(R.id.header);
@@ -136,12 +139,26 @@ public class MovieInfiniteListFragment extends ListFragment
             @Override
             public void failure(RestError error) {
                 Log.d("APP", "Error "+error.getError());
-                Toast.makeText(getActivity().getApplicationContext(),
-                        getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
-                        .show();
                 getListView().removeFooterView(loadProgressView);
-
                 doneLoading();
+
+                // If possible, load data from offline mode
+                // but only if we had trouble in connection all the time
+                if(adapter.getCount() == 0) {
+                    List<Movie> movieList = MovieDbService.getMovies();
+                    for (Movie m : movieList) adapter.add(m);
+
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            getString(R.string.ERROR_LOAD_DATA_USE_OFFLINE), Toast.LENGTH_LONG)
+                            .show();
+                    getListView().removeFooterView(loadButtonView);
+                    showingLoadButton = false;
+
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            getString(R.string.ERROR_LOAD_DATA), Toast.LENGTH_LONG)
+                            .show();
+                }
             }
         });
     }
