@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,13 +33,15 @@ import retrofit.mime.TypedByteArray;
 
 public class MovieInfiniteListFragment extends ListFragment
         implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+
     private int currentPage = 1;
     private RestClient restClient;
     private MovieService movieService;
     private MovieAdapter adapter;
     private Context context;
-    private View loadingView;
     private int threshold = 0;
+    private View loadingView;
+    private TextView descriptionView;
 
     public MovieInfiniteListFragment() {
     }
@@ -49,8 +52,12 @@ public class MovieInfiniteListFragment extends ListFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.fragment_scrollview, container, false);
-        View view = inflater.inflate(R.layout.view_loadingprogress, null);
-        loadingView = view.findViewById(R.id.footer);
+        View footerView = inflater.inflate(R.layout.view_loadingprogress, null);
+        loadingView = footerView.findViewById(R.id.footer);
+
+        View headerView = inflater.inflate(R.layout.view_information, null);
+        descriptionView = (TextView) headerView.findViewById(R.id.header);
+        descriptionView.setText(Html.fromHtml(getString(R.string.about_info)));
 
         context = container.getContext();
 
@@ -66,6 +73,7 @@ public class MovieInfiniteListFragment extends ListFragment
         super.onActivityCreated(savedInstanceState);
 
         getListView().addFooterView(loadingView);
+        getListView().addHeaderView(descriptionView);
         setListAdapter(adapter);
         getListView().setOnScrollListener(this);
         getListView().setOnItemClickListener(this);

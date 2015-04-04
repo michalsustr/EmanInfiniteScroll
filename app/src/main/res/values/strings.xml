@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">InfiniteScroll</string>
+    <string name="app_name">InfiniteMovieScroll</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="ERROR_LOAD_DATA">There was a problem loading data, maybe problems with internet connection?</string>
     <string name="loading_text">Loading...</string>
     <string name="title_activity_movie_detail">MovieDetail</string>
+    <string name="about_info">
+    <![CDATA[
+        <p><strong>Load more movies as you scroll! :-)</strong></p>
+        <p>All movies are saved into a local SQLite database. If the application is not loading the movies correctly, it might be possible that the api key is outdated.</p>
+    ]]>
+    </string>
 
 </resources>
