@@ -3,6 +3,7 @@ package cz.eman.infinitescroll.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cz.eman.infinitescroll.model.rest.MovieTypeAdapterFactory;
 import cz.eman.infinitescroll.model.service.MovieRestService;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -18,6 +19,7 @@ public class RestClient {
 
     public RestClient() {
         Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new MovieTypeAdapterFactory())
                 .create();
 
         mRestAdapter = new RestAdapter.Builder()

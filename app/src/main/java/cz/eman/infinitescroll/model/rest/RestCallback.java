@@ -1,6 +1,5 @@
 package cz.eman.infinitescroll.model.rest;
 
-import cz.eman.infinitescroll.model.entity.RestError;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 

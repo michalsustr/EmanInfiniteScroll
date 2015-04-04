@@ -1,6 +1,6 @@
 package cz.eman.infinitescroll.model.service;
 
-import cz.eman.infinitescroll.model.rest.API;
+import cz.eman.infinitescroll.model.entity.API;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;

@@ -18,9 +18,10 @@ import java.util.List;
 
 import cz.eman.infinitescroll.R;
 import cz.eman.infinitescroll.model.RestClient;
+import cz.eman.infinitescroll.model.entity.AbridgedCast;
 import cz.eman.infinitescroll.model.entity.Movie;
-import cz.eman.infinitescroll.model.entity.RestError;
-import cz.eman.infinitescroll.model.rest.API;
+import cz.eman.infinitescroll.model.rest.RestError;
+import cz.eman.infinitescroll.model.entity.API;
 import cz.eman.infinitescroll.model.rest.RestCallback;
 import cz.eman.infinitescroll.model.service.MovieDbService;
 import cz.eman.infinitescroll.model.service.MovieRestService;
@@ -129,6 +130,11 @@ public class MovieInfiniteListFragment extends ListFragment
 
                 for (Movie m : api.getMovies()) {
                     adapter.add(m);
+                    m.getPosters().save();
+                    Log.d("APP", "poster "+m.getPosters().getThumbnail());
+                    for (AbridgedCast c : m.getAbridgedCast()) {
+                        c.save();
+                    }
                     m.save();
                 }
                 adapter.notifyDataSetChanged();

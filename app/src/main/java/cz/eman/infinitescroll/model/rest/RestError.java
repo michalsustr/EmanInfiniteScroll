@@ -1,4 +1,4 @@
-package cz.eman.infinitescroll.model.entity;
+package cz.eman.infinitescroll.model.rest;
 
 public class RestError
 {
