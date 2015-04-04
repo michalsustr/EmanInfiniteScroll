@@ -3,12 +3,11 @@
              android:id="@+id/container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".MainActivity"
->
+             tools:context=".MainActivity">
+
     <fragment class="cz.eman.infinitescroll.ui.fragment.MovieInfiniteListFragment"
               android:id="@+id/listFragment"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-        />
+              android:layout_height="match_parent" />
 
 </FrameLayout>

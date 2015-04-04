@@ -1,23 +1,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:id="@+id/container"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:baselineAligned="false"
-             tools:context=".MainActivity"
->
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/container"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:baselineAligned="false"
+              tools:context=".MainActivity">
+
     <fragment class="cz.eman.infinitescroll.ui.fragment.MovieInfiniteListFragment"
               android:id="@+id/listFragment"
               android:layout_weight="1"
               android:layout_height="match_parent"
-              android:layout_width="match_parent"
-        />
+              android:layout_width="match_parent" />
 
     <fragment class="cz.eman.infinitescroll.ui.fragment.MovieDetailFragment"
               android:id="@+id/detailFragment"
               android:layout_width="match_parent"
               android:layout_weight="3"
-              android:layout_height="match_parent"
-        />
+              android:layout_height="match_parent" />
 
 </LinearLayout>
