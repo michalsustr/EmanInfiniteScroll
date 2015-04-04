@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="ERROR_LOAD_DATA">There was a problem loading data, maybe problems with internet connection?</string>
     <string name="loading_text">Loading...</string>
+    <string name="title_activity_movie_detail">MovieDetail</string>
 
 </resources>

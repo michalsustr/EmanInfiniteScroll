@@ -1,22 +1,39 @@
 package cz.eman.infinitescroll.ui.activity;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.os.Build;
 
 import cz.eman.infinitescroll.R;
-import cz.eman.infinitescroll.ui.fragment.MovieInfiniteListFragment;
+import cz.eman.infinitescroll.ui.fragment.MovieDetailFragment;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MovieDetail extends ActionBarActivity {
+
+    public static final String EXTRA_MOVIE_ID = "movieId";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_movie_detail);
         if (savedInstanceState == null) {
+            Bundle extra = getIntent().getExtras();
+
+            MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(extra);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MovieInfiniteListFragment())
+                    .add(R.id.container, fragment)
                     .commit();
         }
     }

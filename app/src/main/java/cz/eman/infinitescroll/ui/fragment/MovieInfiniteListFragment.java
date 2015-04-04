@@ -1,6 +1,7 @@
 package cz.eman.infinitescroll.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,13 +23,15 @@ import cz.eman.infinitescroll.model.entity.Movie;
 import cz.eman.infinitescroll.model.entity.RestError;
 import cz.eman.infinitescroll.model.rest.RestCallback;
 import cz.eman.infinitescroll.model.service.MovieService;
+import cz.eman.infinitescroll.ui.activity.MovieDetail;
 import cz.eman.infinitescroll.ui.adapter.MovieAdapter;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-public class ScrollViewFragment extends ListFragment implements AbsListView.OnScrollListener{
+public class MovieInfiniteListFragment extends ListFragment
+        implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
     private int currentPage = 1;
     private RestClient restClient;
     private MovieService movieService;
@@ -36,7 +40,7 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
     private View loadingView;
     private int threshold = 0;
 
-    public ScrollViewFragment() {
+    public MovieInfiniteListFragment() {
     }
 
     @Override
@@ -64,6 +68,7 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
         getListView().addFooterView(loadingView);
         setListAdapter(adapter);
         getListView().setOnScrollListener(this);
+        getListView().setOnItemClickListener(this);
         loadData(currentPage);
     }
 
@@ -122,4 +127,11 @@ public class ScrollViewFragment extends ListFragment implements AbsListView.OnSc
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), MovieDetail.class);
+        intent.putExtra(MovieDetail.EXTRA_MOVIE_ID, adapter.getItem(position).getId());
+        startActivity(intent);
+    }
 }
