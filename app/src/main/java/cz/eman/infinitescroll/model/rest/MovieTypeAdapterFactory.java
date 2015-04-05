@@ -11,8 +11,14 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 
+/**
+ * Gson type adapter
+ */
 public class MovieTypeAdapterFactory implements TypeAdapterFactory {
 
+    /**
+     * Type adapter for posters element in JSON response from server
+     */
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
         final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);

@@ -17,9 +17,10 @@ public class MovieDetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+
+        // Show movie invoked by intent
         MovieDetailFragment detailFragment = (MovieDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detailFragment);
-
         detailFragment.showMovie(getIntent().getExtras().getInt(EXTRA_MOVIE_ID));
     }
 }

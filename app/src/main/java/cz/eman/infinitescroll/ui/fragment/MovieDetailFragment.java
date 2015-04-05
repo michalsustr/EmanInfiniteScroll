@@ -59,8 +59,6 @@ public class MovieDetailFragment extends Fragment {
     }
 
     public void showMovie(Integer movieId) {
-        Log.d("APP", "show movie id " + movieId);
-
         selectMovie.setVisibility(View.INVISIBLE);
         titleView.setVisibility(View.VISIBLE);
         yearView.setVisibility(View.VISIBLE);
@@ -90,7 +88,7 @@ public class MovieDetailFragment extends Fragment {
                 }
             }
         } else {
-            cast += "No cast information available";
+            cast += getResources().getString(R.string.no_cast);
         }
         castView.setText(cast);
     }

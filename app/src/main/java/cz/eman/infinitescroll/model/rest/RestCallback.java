@@ -3,6 +3,10 @@ package cz.eman.infinitescroll.model.rest;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
+/**
+ * Custom rest callback that handles simple error states.
+ * @param <T>
+ */
 public abstract class RestCallback<T> implements Callback<T>
 {
     public abstract void failure(RestError restError);

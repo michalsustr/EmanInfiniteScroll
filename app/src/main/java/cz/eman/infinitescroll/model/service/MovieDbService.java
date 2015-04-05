@@ -6,6 +6,9 @@ import java.util.List;
 
 import cz.eman.infinitescroll.model.entity.Movie;
 
+/**
+ * Service to retrieve data saved in database
+ */
 public class MovieDbService {
 
     public static Movie getMovieById(Integer sid) {

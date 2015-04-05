@@ -74,12 +74,14 @@ abstract public class InfiniteListFragment extends ListFragment
         if(scrollToIndex != null) {
             getListView().setSelectionFromTop(scrollToIndex, 0);
             scrollToIndex = null;
+
             // Check for reaching end of records
             if(totalPages != null && currentPage == totalPages) {
                 getListView().addFooterView(nomoreDataView);
                 showingNoMoreData = true;
             }
         } else {
+
             // Not restoring, start loading data from server
             getListView().addFooterView(loadProgressView, null, false);
             showingProgress = true;
@@ -90,6 +92,8 @@ abstract public class InfiniteListFragment extends ListFragment
     protected View.OnClickListener onLoadButtonClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            // Do not load if accessing from database
+            // (that should be the only reason for totalPages to be null)
             if(totalPages == null) {
                 return;
             }
@@ -114,6 +118,8 @@ abstract public class InfiniteListFragment extends ListFragment
     }
 
     protected void loadNextPage() {
+        // Do not load if accessing from database
+        // (that should be the only reason for totalPages to be null)
         if(totalPages == null) {
             return;
         }

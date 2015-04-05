@@ -9,6 +9,9 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
+/**
+ * Simple rest client to communicate with server
+ */
 public class RestClient {
     private static final String BASE_URL = "http://api.rottentomatoes.com/api/public/v1.0";
     private static final String API_KEY = "4wfs9wmcezvpp48ngwnrvhvj";

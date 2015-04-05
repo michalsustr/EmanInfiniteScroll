@@ -38,7 +38,7 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
 
     private MovieRestService movieRestService;
     private MovieAdapter adapter;
-    private RelativeLayout descriptionView;
+    private RelativeLayout informationView;
 
 
     public MovieInfiniteListFragment() {
@@ -74,9 +74,9 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        descriptionView = (RelativeLayout) inflater.inflate(R.layout.view_information, null)
+        informationView = (RelativeLayout) inflater.inflate(R.layout.view_information, null)
                 .findViewById(R.id.header);
-        ((TextView) descriptionView.findViewById(R.id.headerInfo))
+        ((TextView) informationView.findViewById(R.id.headerInfo))
                 .setText(Html.fromHtml(getString(R.string.about_info)));
 
         movieRestService = new RestClient().getMovieService();
@@ -87,7 +87,7 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().addHeaderView(descriptionView, null, false);
+        getListView().addHeaderView(informationView, null, false);
 
         if(adapter == null) {
             adapter = new MovieAdapter(getActivity().getApplicationContext());

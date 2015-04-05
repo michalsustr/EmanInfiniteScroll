@@ -5,6 +5,9 @@ import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
+/**
+ * Service to retrieve data over network
+ */
 public interface MovieRestService
 {
     @GET("/lists/movies/upcoming.json")
