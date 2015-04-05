@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
@@ -58,71 +60,28 @@ public class MovieDetailFragment extends Fragment {
         Log.d("APP", "show movie id " + movieId);
 
         Movie movie = MovieDbService.getMovieById(movieId);
-        new DownloadImage().execute(movie.getPosters().getThumbnail());
         titleView.setText(movie.getTitle());
         yearView.setText("Year: "+movie.getYear());
+        Picasso.with(getActivity())
+                .load(movie.getPosters().getThumbnail())
+                .error(R.drawable.ic_list_nopreview)
+                .into(thumbnailView);
         synopsisView.setText(movie.getSynopsis());
 
         String cast = "";
         if(movie.getAbridgedCast().size() > 0) {
+            int i = 0;
             for (AbridgedCast c : movie.getAbridgedCast()) {
                 cast += " ● " +c.getName() +"\n";
+                i++;
+                if(i > 6) {
+                    cast += "… and many more.";
+                    break;
+                }
             }
         } else {
             cast += "No cast information available";
         }
         castView.setText(cast);
-    }
-
-    private void setThumbnail(Drawable drawable)
-    {
-        thumbnailView.setImageDrawable(drawable);
-    }
-
-    public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
-        @Override
-        protected Drawable doInBackground(String... arg0) {
-            return downloadImage(arg0[0]);
-        }
-
-        protected void onPostExecute(Drawable image) {
-            setThumbnail(image);
-        }
-
-        private Drawable downloadImage(String _url)
-        {
-            Log.d("APP", "downloading "+_url);
-            //Prepare to download image
-            URL url;
-            BufferedOutputStream out;
-            InputStream in;
-            BufferedInputStream buf;
-
-            //BufferedInputStream buf;
-            try {
-                url = new URL(_url);
-                in = url.openStream();
-
-                // Read the inputstream
-                buf = new BufferedInputStream(in);
-
-                // Convert the BufferedInputStream to a Bitmap
-                Bitmap bMap = BitmapFactory.decodeStream(buf);
-                if (in != null) {
-                    in.close();
-                }
-                if (buf != null) {
-                    buf.close();
-                }
-
-                return new BitmapDrawable(getActivity().getResources(), bMap);
-
-            } catch (Exception e) {
-                Log.e("Error reading file", e.toString());
-            }
-
-            return null;
-        }
-
     }
 }
