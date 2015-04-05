@@ -27,8 +27,6 @@ public class Movie extends Model {
     @SerializedName("mpaa_rating")
     @Expose
     private String mpaaRating;
-    @Expose
-    private Integer runtime;
     @SerializedName("release_dates")
     @Expose
     private ReleaseDates releaseDates;
@@ -123,24 +121,6 @@ public class Movie extends Model {
      */
     public void setMpaaRating(String mpaaRating) {
         this.mpaaRating = mpaaRating;
-    }
-
-    /**
-     *
-     * @return
-     *     The runtime
-     */
-    public Integer getRuntime() {
-        return runtime;
-    }
-
-    /**
-     *
-     * @param runtime
-     *     The runtime
-     */
-    public void setRuntime(Integer runtime) {
-        this.runtime = runtime;
     }
 
     /**

@@ -32,9 +32,8 @@ Riešenie
 
 Známe nedostatky:
 -----------------
-- Pri nesprávnom parametri page (napr. = 0) sa nespracuje správne chyba vrátená serverom, pretože je iba určená ako error,
-a je zle nastavený HTTP STATUS (nemá byť kód 200 OK pri chybe!).
+- Pri nesprávnom parametri page (napr. = 0) sa nespracuje správne chyba vrátená serverom. Server vráti {error:"xxx"} a je zle nastavený HTTP STATUS (nemá byť kód 200 OK pri chybe!).
    
   Dá sa to riešiť vlastným registerTypeAdapterFactory pre gson, ale je to trochu oser.
 
-- 
+- (drobnosť) Niektoré polia v JSONe som odignoroval (konkrétne "runtime" v objekte Movie). Odpoveď je číslo, ale ak je runtime neznámy, tak server pre to vráti "", čo nie je validná odpoveď. 
