@@ -16,10 +16,19 @@ import cz.eman.infinitescroll.model.entity.Movie;
 public class MovieAdapter extends ArrayAdapter<Movie> {
     private LayoutInflater mInflater;
     protected static int mRowResource = R.layout.row_movie;
+    private Integer[] ids;
 
     public MovieAdapter(Context context) {
         super(context, mRowResource, new ArrayList<Movie>());
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public int[] getIds() {
+        int[] ids = new int[getCount()];
+        for (int i = 0; i < getCount(); i++) {
+            ids[i] = getItem(i).getSid();
+        }
+        return ids;
     }
 
     static class ViewHolderItem {

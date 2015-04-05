@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName;
 public class Movie extends Model {
 
     @Expose
-    @Column
+    @Column(unique = true)
     @SerializedName("id")
     private Integer sid;
     @Expose

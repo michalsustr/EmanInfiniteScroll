@@ -32,6 +32,11 @@ import retrofit.client.Response;
 public class MovieInfiniteListFragment extends ListFragment
         implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
+    private static final String SAVED_ADAPTER_MOVIE_IDS = "movieIds";
+    private static final String SAVED_MOVIE_INDEX = "movieIdx";
+    private static final String SAVED_CURRENT_PAGE = "currentPage";
+    private static final String SAVED_TOTAL_PAGES = "totalPages";
+
     private int currentPage = 1;
     private int itemsPerPage = 5;
     private int totalPages;
@@ -44,12 +49,31 @@ public class MovieInfiniteListFragment extends ListFragment
     private TextView descriptionView;
     private TextView nomoreDataView;
     private TextView loadButtonView;
+    private Integer scrollToIndex;
 
 
     public MovieInfiniteListFragment() {
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            // Restore movie list
+            int[] ids = savedInstanceState.getIntArray(SAVED_ADAPTER_MOVIE_IDS);
+            if (ids != null) {
+                adapter = new MovieAdapter(getActivity().getApplicationContext());
+                for (int i = 0; i < ids.length; i++) {
+                    adapter.add(MovieDbService.getMovieById(ids[i]));
+                }
+            }
+            // Restore position later, when getListView() is available
+            scrollToIndex = savedInstanceState.getInt(SAVED_MOVIE_INDEX);
+            currentPage = savedInstanceState.getInt(SAVED_CURRENT_PAGE);
+            totalPages = savedInstanceState.getInt(SAVED_TOTAL_PAGES);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,13 +105,30 @@ public class MovieInfiniteListFragment extends ListFragment
         super.onActivityCreated(savedInstanceState);
 
         getListView().addHeaderView(descriptionView, null, false);
-        getListView().addFooterView(loadProgressView, null, false);
-        showingProgress = true;
-        adapter = new MovieAdapter(getActivity().getApplicationContext());
+
+        if(adapter == null) {
+            adapter = new MovieAdapter(getActivity().getApplicationContext());
+        }
         setListAdapter(adapter);
+
         getListView().setOnScrollListener(this);
         getListView().setOnItemClickListener(this);
-        loadData(currentPage);
+
+        // Restoring from saved state
+        if(scrollToIndex != null) {
+            getListView().setSelectionFromTop(scrollToIndex, 0);
+            scrollToIndex = null;
+            // Check for reaching end of records
+            if(currentPage == totalPages) {
+                getListView().addFooterView(nomoreDataView);
+                showingNoMoreData = true;
+            }
+        } else {
+            // Not restoring, start loading data from server
+            getListView().addFooterView(loadProgressView, null, false);
+            showingProgress = true;
+            loadData(currentPage);
+        }
     }
 
     private View.OnClickListener onLoadButtonClick = new View.OnClickListener() {
@@ -137,6 +178,7 @@ public class MovieInfiniteListFragment extends ListFragment
                         c.setMovieId(m.getSid());
                         c.save();
                     }
+                    // This can throw exception because of movie's unique id, but that's ok.
                     m.save();
                 }
                 adapter.notifyDataSetChanged();
@@ -172,9 +214,9 @@ public class MovieInfiniteListFragment extends ListFragment
     }
 
     // for such a simple thing we need locking ... omg
-    private volatile boolean showingProgress   = false;
-    private volatile boolean showingLoadButton = false;
-    private volatile boolean showingNoMoreData = false;
+    private boolean showingProgress   = false;
+    private boolean showingLoadButton = false;
+    private boolean showingNoMoreData = false;
     private synchronized void showLoading() {
         if(showingLoadButton) {
             getListView().removeFooterView(loadButtonView);
@@ -220,5 +262,18 @@ public class MovieInfiniteListFragment extends ListFragment
         } else {
             detailFragment.showMovie(movieId);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+
+        // Note: getValues() is a method in your ArrayAdaptor subclass
+        int[] ids = adapter.getIds();
+        savedState.putIntArray(SAVED_ADAPTER_MOVIE_IDS, ids);
+        savedState.putInt(SAVED_MOVIE_INDEX, getListView().getFirstVisiblePosition());
+        savedState.putInt(SAVED_CURRENT_PAGE, currentPage);
+        savedState.putInt(SAVED_TOTAL_PAGES, totalPages);
+
     }
 }
