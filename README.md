@@ -39,3 +39,5 @@ Známe nedostatky:
 - (drobnosť) Niektoré polia v JSONe som odignoroval (konkrétne "runtime" v objekte Movie). Odpoveď je číslo, ale ak je runtime neznámy, tak server pre to vráti "", čo nie je validná odpoveď. 
 
 - (drobnosť) Nepoužívam mipmap kvôli podpore starších API
+
+- Trieda InfiniteListFragment nejde to veľkého stupňa abstrakcie, dalo by sa to spraviť aj lepšie pomocou rôznych design patterns.
