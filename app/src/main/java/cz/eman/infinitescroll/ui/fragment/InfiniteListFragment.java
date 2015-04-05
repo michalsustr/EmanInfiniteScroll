@@ -75,7 +75,7 @@ abstract public class InfiniteListFragment extends ListFragment
             getListView().setSelectionFromTop(scrollToIndex, 0);
             scrollToIndex = null;
             // Check for reaching end of records
-            if(currentPage == totalPages) {
+            if(totalPages != null && currentPage == totalPages) {
                 getListView().addFooterView(nomoreDataView);
                 showingNoMoreData = true;
             }
@@ -91,7 +91,7 @@ abstract public class InfiniteListFragment extends ListFragment
         @Override
         public void onClick(View v) {
             if(totalPages == null) {
-                throw new IllegalStateException("The number of total pages must be set.");
+                return;
             }
 
             if(currentPage < totalPages) {
@@ -115,7 +115,7 @@ abstract public class InfiniteListFragment extends ListFragment
 
     protected void loadNextPage() {
         if(totalPages == null) {
-            throw new IllegalStateException("The number of total pages must be set.");
+            return;
         }
 
         // load next if possible
@@ -144,7 +144,7 @@ abstract public class InfiniteListFragment extends ListFragment
             showingProgress = false;
         }
 
-        if(totalPages != null && currentPage == totalPages) {
+        if(totalPages == null || (totalPages != null && currentPage == totalPages)) {
             getListView().addFooterView(nomoreDataView, null, false);
             showingNoMoreData = true;
         } else {
@@ -163,7 +163,7 @@ abstract public class InfiniteListFragment extends ListFragment
     public int getItemsPerPage() {
         return itemsPerPage;
     }
-    public int getTotalPages() {
+    public Integer getTotalPages() {
         return totalPages;
     }
     public void setScrollToIndex(Integer scrollToIndex) {
@@ -172,7 +172,7 @@ abstract public class InfiniteListFragment extends ListFragment
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
     }
-    public void setTotalPages(int totalPages) {
+    public void setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
     }
     public void setLoadThreshold(int loadThreshold) {

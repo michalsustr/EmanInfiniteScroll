@@ -3,6 +3,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/load_more_data"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/sidebar_padding"
+        android:paddingRight="@dimen/sidebar_padding"
         android:id="@+id/footer" />

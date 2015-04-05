@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:drawableRight="@drawable/ic_movie"
         android:id="@+id/headerInfo"
-        android:paddingTop="@dimen/activity_horizontal_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"/>
+        android:paddingTop="@dimen/sidebar_padding"
+        android:paddingLeft="@dimen/sidebar_padding"
+        android:paddingRight="@dimen/sidebar_padding"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
         android:id="@+id/headerName"
         android:text="Title"
         style="?android:attr/listSeparatorTextViewStyle"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/sidebar_padding"
         android:layout_weight="1"/>
 
     <TextView
@@ -32,7 +32,7 @@
         android:text="Year"
         style="?android:attr/listSeparatorTextViewStyle"
         android:gravity="right"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/sidebar_padding"
         android:layout_weight="1"
         />
     </LinearLayout>

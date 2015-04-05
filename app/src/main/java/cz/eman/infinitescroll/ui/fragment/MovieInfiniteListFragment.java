@@ -3,13 +3,11 @@ package cz.eman.infinitescroll.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +36,6 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
 
     private static final Integer ITEMS_PER_PAGE = 5;
 
-    private RestClient restClient;
     private MovieRestService movieRestService;
     private MovieAdapter adapter;
     private RelativeLayout descriptionView;
@@ -61,10 +58,14 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
                     adapter.add(MovieDbService.getMovieById(ids[i]));
                 }
             }
+
             // Restore position later, when getListView() is available
+            // by setting scrollToIndex
             setScrollToIndex(savedInstanceState.getInt(SAVED_MOVIE_INDEX));
             setCurrentPage(savedInstanceState.getInt(SAVED_CURRENT_PAGE));
-            setTotalPages(savedInstanceState.getInt(SAVED_TOTAL_PAGES));
+            if(savedInstanceState.getBundle(SAVED_TOTAL_PAGES) != null) {
+                setTotalPages(savedInstanceState.getInt(SAVED_TOTAL_PAGES));
+            }
         }
     }
 
@@ -78,8 +79,7 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
         ((TextView) descriptionView.findViewById(R.id.headerInfo))
                 .setText(Html.fromHtml(getString(R.string.about_info)));
 
-        restClient = new RestClient();
-        movieRestService = restClient.getMovieService();
+        movieRestService = new RestClient().getMovieService();
 
         return rootView;
     }
@@ -93,6 +93,11 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
             adapter = new MovieAdapter(getActivity().getApplicationContext());
         }
         setListAdapter(adapter);
+
+        // Restoring state after being saved, update loading status
+        if(savedInstanceState != null) {
+            doneLoading();
+        }
     }
 
     @Override
@@ -102,9 +107,6 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
         movieRestService.getMovies(currentPage, ITEMS_PER_PAGE, new RestCallback<API>() {
             @Override
             public void success(API api, Response response) {
-                Log.d("APP", "Loaded movies " + api.getMovies());
-                Log.d("APP", "Loaded " + api.getMovies().size());
-
                 // update number of total pages
                 int totalPages = api.getTotal() / ITEMS_PER_PAGE;
                 // handle integer rounding proble
@@ -138,7 +140,7 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
                 if(adapter.getCount() == 0) {
                     List<Movie> movieList = MovieDbService.getMovies();
                     for (Movie m : movieList) adapter.add(m);
-                    setTotalPages(movieList.size()/ITEMS_PER_PAGE);
+                    setTotalPages(null); // Do not show more buttons or anything
 
                     Toast.makeText(getActivity().getApplicationContext(),
                             getString(R.string.ERROR_LOAD_DATA_USE_OFFLINE), Toast.LENGTH_LONG)
@@ -181,7 +183,9 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
         savedState.putIntArray(SAVED_ADAPTER_MOVIE_IDS, ids);
         savedState.putInt(SAVED_MOVIE_INDEX, getListView().getFirstVisiblePosition());
         savedState.putInt(SAVED_CURRENT_PAGE, getCurrentPage());
-        savedState.putInt(SAVED_TOTAL_PAGES, getTotalPages());
+        if(getTotalPages() != null) {
+            savedState.putInt(SAVED_TOTAL_PAGES, getTotalPages());
+        }
 
     }
 }

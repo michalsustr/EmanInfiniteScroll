@@ -41,3 +41,5 @@ Známe nedostatky:
 - (drobnosť) Nepoužívam mipmap kvôli podpore starších API
 
 - Trieda InfiniteListFragment nejde to veľkého stupňa abstrakcie, dalo by sa to spraviť aj lepšie pomocou rôznych design patterns.
+
+- Netestoval som verziu pre tablet na nejakom vlastnom zariadení, iba pomocou emulátoru.
