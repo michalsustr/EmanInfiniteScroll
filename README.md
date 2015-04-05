@@ -37,3 +37,5 @@ Známe nedostatky:
   Dá sa to riešiť vlastným registerTypeAdapterFactory pre gson, ale je to trochu oser.
 
 - (drobnosť) Niektoré polia v JSONe som odignoroval (konkrétne "runtime" v objekte Movie). Odpoveď je číslo, ale ak je runtime neznámy, tak server pre to vráti "", čo nie je validná odpoveď. 
+
+- (drobnosť) Nepoužívam mipmap kvôli podpore starších API
