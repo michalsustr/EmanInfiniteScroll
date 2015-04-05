@@ -16,6 +16,14 @@
         tools:context="cz.eman.infinitescroll.ui.activity.MovieDetailActivity$PlaceholderFragment">
 
         <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/select_movie"
+            android:gravity="center"
+            android:id="@+id/selectMovie"/>
+
+        <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,9 +34,8 @@
             android:id="@+id/thumbnail"
             android:contentDescription="Movie poster"
             android:maxWidth="54px"
-            android:maxHeight="79px"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="80px"
             android:src="@drawable/ic_list_nopreview"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
@@ -57,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/synopsis"
             android:text="Cast"
+            android:paddingTop="@dimen/activity_vertical_margin"
             style="@style/Platform.AppCompat.Light"/>
 
         <TextView

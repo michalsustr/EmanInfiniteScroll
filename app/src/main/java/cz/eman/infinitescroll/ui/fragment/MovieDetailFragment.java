@@ -28,11 +28,13 @@ import cz.eman.infinitescroll.model.service.MovieDbService;
 
 public class MovieDetailFragment extends Fragment {
 
+    private TextView selectMovie;
     private TextView titleView;
     private TextView yearView;
     private ImageView thumbnailView;
     private TextView synopsisView;
     private TextView castView;
+    private TextView castLabel;
 
     public MovieDetailFragment() {
     }
@@ -47,17 +49,35 @@ public class MovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
+        selectMovie = (TextView) rootView.findViewById(R.id.selectMovie);
         titleView = (TextView) rootView.findViewById(R.id.title);
         yearView = (TextView) rootView.findViewById(R.id.year);
         thumbnailView = (ImageView) rootView.findViewById(R.id.thumbnail);
         synopsisView = (TextView) rootView.findViewById(R.id.synopsis);
         castView = (TextView) rootView.findViewById(R.id.cast);
+        castLabel = (TextView) rootView.findViewById(R.id.castLabel);
+
+        selectMovie.setVisibility(View.VISIBLE);
+        titleView.setVisibility(View.INVISIBLE);
+        yearView.setVisibility(View.INVISIBLE);
+        thumbnailView.setVisibility(View.INVISIBLE);
+        synopsisView.setVisibility(View.INVISIBLE);
+        castLabel.setVisibility(View.INVISIBLE);
+        castView.setVisibility(View.INVISIBLE);
 
         return rootView;
     }
 
     public void showMovie(Integer movieId) {
         Log.d("APP", "show movie id " + movieId);
+
+        selectMovie.setVisibility(View.INVISIBLE);
+        titleView.setVisibility(View.VISIBLE);
+        yearView.setVisibility(View.VISIBLE);
+        thumbnailView.setVisibility(View.VISIBLE);
+        synopsisView.setVisibility(View.VISIBLE);
+        castLabel.setVisibility(View.VISIBLE);
+        castView.setVisibility(View.VISIBLE);
 
         Movie movie = MovieDbService.getMovieById(movieId);
         titleView.setText(movie.getTitle());

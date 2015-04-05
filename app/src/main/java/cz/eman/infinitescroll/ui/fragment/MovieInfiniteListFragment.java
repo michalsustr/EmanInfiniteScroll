@@ -138,6 +138,7 @@ public class MovieInfiniteListFragment extends InfiniteListFragment {
                 if(adapter.getCount() == 0) {
                     List<Movie> movieList = MovieDbService.getMovies();
                     for (Movie m : movieList) adapter.add(m);
+                    setTotalPages(movieList.size()/ITEMS_PER_PAGE);
 
                     Toast.makeText(getActivity().getApplicationContext(),
                             getString(R.string.ERROR_LOAD_DATA_USE_OFFLINE), Toast.LENGTH_LONG)

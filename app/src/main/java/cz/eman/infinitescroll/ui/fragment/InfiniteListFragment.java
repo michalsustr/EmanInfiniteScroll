@@ -144,7 +144,7 @@ abstract public class InfiniteListFragment extends ListFragment
             showingProgress = false;
         }
 
-        if(currentPage == totalPages) {
+        if(totalPages != null && currentPage == totalPages) {
             getListView().addFooterView(nomoreDataView, null, false);
             showingNoMoreData = true;
         } else {
