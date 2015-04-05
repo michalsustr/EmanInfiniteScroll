@@ -18,6 +18,9 @@ public class AbridgedCast extends Model {
     @SerializedName("id")
     private String sid;
 
+    @Column
+    private Integer movieId;
+
     /**
      * 
      * @return
@@ -54,4 +57,11 @@ public class AbridgedCast extends Model {
         this.sid = sid;
     }
 
+    public Integer getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
+    }
 }

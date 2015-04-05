@@ -36,6 +36,11 @@ public class MovieDetailFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
@@ -60,15 +65,13 @@ public class MovieDetailFragment extends Fragment {
 
         String cast = "";
         if(movie.getAbridgedCast().size() > 0) {
-            Log.d("APP", movie.getAbridgedCast().toString());
             for (AbridgedCast c : movie.getAbridgedCast()) {
-                cast += c.getName() +"\n";
-                Log.d("APP", "name "+c.getName());
+                cast += " ● " +c.getName() +"\n";
             }
         } else {
             cast += "No cast information available";
         }
-        castView.setTag(cast);
+        castView.setText(cast);
     }
 
     private void setThumbnail(Drawable drawable)

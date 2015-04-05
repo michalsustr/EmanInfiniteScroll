@@ -49,6 +49,8 @@ public class MovieInfiniteListFragment extends ListFragment
     public MovieInfiniteListFragment() {
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -131,8 +133,8 @@ public class MovieInfiniteListFragment extends ListFragment
                 for (Movie m : api.getMovies()) {
                     adapter.add(m);
                     m.getPosters().save();
-                    Log.d("APP", "poster "+m.getPosters().getThumbnail());
                     for (AbridgedCast c : m.getAbridgedCast()) {
+                        c.setMovieId(m.getSid());
                         c.save();
                     }
                     m.save();

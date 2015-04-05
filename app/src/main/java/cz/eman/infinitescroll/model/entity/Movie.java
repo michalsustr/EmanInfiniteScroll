@@ -7,6 +7,7 @@ import java.util.List;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -220,6 +221,9 @@ public class Movie extends Model {
      *     The abridgedCast
      */
     public List<AbridgedCast> getAbridgedCast() {
+        if(abridgedCast == null || abridgedCast.size() == 0) {
+            abridgedCast = new Select().from(AbridgedCast.class).where("movieId = ?", sid).execute();
+        }
         return abridgedCast;
     }
 
