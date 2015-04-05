@@ -15,37 +15,35 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         tools:context="cz.eman.infinitescroll.ui.activity.MovieDetailActivity$PlaceholderFragment">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/firstRow"
-            android:layout_marginBottom="18dp">
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/Base.TextAppearance.AppCompat.Headline"
-                android:layout_weight="1" />
+            style="@style/Base.TextAppearance.AppCompat.Headline"
+            android:text="asdf"
+             />
 
-            <ImageView
-                android:id="@+id/thumbnail"
-                android:contentDescription="Movie poster"
-                android:maxWidth="54px"
-                android:maxHeight="79px"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_list_nopreview" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:contentDescription="Movie poster"
+            android:maxWidth="54px"
+            android:maxHeight="79px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_list_nopreview"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
 
         <TextView
-            android:layout_below="@id/firstRow"
             android:id="@+id/year"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:paddingBottom="@dimen/activity_vertical_margin" />
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:layout_below="@+id/title"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
 
         <TextView
             android:id="@+id/synopsis"
@@ -54,10 +52,18 @@
             android:layout_below="@id/year"
             android:lineSpacingExtra="8dp" />
 
-        <ListView
+        <TextView
+            android:id="@+id/castLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/synopsis"
+            android:text="Cast"
+            style="@style/Platform.AppCompat.Light"/>
+
+        <TextView
             android:id="@+id/cast"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/synopsis" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/castLabel" />
     </RelativeLayout>
 </ScrollView>

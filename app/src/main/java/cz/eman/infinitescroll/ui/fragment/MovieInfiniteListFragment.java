@@ -78,8 +78,8 @@ public class MovieInfiniteListFragment extends ListFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getListView().addHeaderView(descriptionView);
-        getListView().addFooterView(loadProgressView);
+        getListView().addHeaderView(descriptionView, null, false);
+        getListView().addFooterView(loadProgressView, null, false);
         showingProgress = true;
         adapter = new MovieAdapter(getActivity().getApplicationContext());
         setListAdapter(adapter);
@@ -179,7 +179,7 @@ public class MovieInfiniteListFragment extends ListFragment
             showingLoadButton = false;
         }
 
-        getListView().addFooterView(loadProgressView);
+        getListView().addFooterView(loadProgressView, null, false);
         showingProgress = true;
     }
     private synchronized void doneLoading() {
@@ -189,10 +189,10 @@ public class MovieInfiniteListFragment extends ListFragment
         }
 
         if(currentPage == totalPages) {
-            getListView().addFooterView(nomoreDataView);
+            getListView().addFooterView(nomoreDataView, null, false);
             showingNoMoreData = true;
         } else {
-            getListView().addFooterView(loadButtonView);
+            getListView().addFooterView(loadButtonView, null, false);
             showingLoadButton = true;
         }
     }
@@ -202,6 +202,11 @@ public class MovieInfiniteListFragment extends ListFragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // Prevent clicking of header / footer
+        if(position == 0 || position == adapter.getCount()+1) {
+            return;
+        }
+
         MovieDetailFragment detailFragment = (MovieDetailFragment) getFragmentManager()
                 .findFragmentById(R.id.detailFragment);
         Integer movieId = adapter.getItem(position-1).getSid();

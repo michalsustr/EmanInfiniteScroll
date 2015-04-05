@@ -6,4 +6,7 @@
           android:textStyle="italic"
           android:id="@id/footer"
           android:paddingTop="24dp"
-          android:paddingBottom="24dp" />
+          android:paddingBottom="24dp"
+          android:paddingLeft="@dimen/activity_horizontal_margin"
+          android:paddingRight="@dimen/activity_horizontal_margin"
+    />

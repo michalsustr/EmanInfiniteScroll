@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import cz.eman.infinitescroll.R;
+import cz.eman.infinitescroll.model.entity.AbridgedCast;
 import cz.eman.infinitescroll.model.entity.Movie;
 import cz.eman.infinitescroll.model.service.MovieDbService;
 
@@ -29,6 +30,7 @@ public class MovieDetailFragment extends Fragment {
     private TextView yearView;
     private ImageView thumbnailView;
     private TextView synopsisView;
+    private TextView castView;
 
     public MovieDetailFragment() {
     }
@@ -42,6 +44,7 @@ public class MovieDetailFragment extends Fragment {
         yearView = (TextView) rootView.findViewById(R.id.year);
         thumbnailView = (ImageView) rootView.findViewById(R.id.thumbnail);
         synopsisView = (TextView) rootView.findViewById(R.id.synopsis);
+        castView = (TextView) rootView.findViewById(R.id.cast);
 
         return rootView;
     }
@@ -54,6 +57,18 @@ public class MovieDetailFragment extends Fragment {
         titleView.setText(movie.getTitle());
         yearView.setText("Year: "+movie.getYear());
         synopsisView.setText(movie.getSynopsis());
+
+        String cast = "";
+        if(movie.getAbridgedCast().size() > 0) {
+            Log.d("APP", movie.getAbridgedCast().toString());
+            for (AbridgedCast c : movie.getAbridgedCast()) {
+                cast += c.getName() +"\n";
+                Log.d("APP", "name "+c.getName());
+            }
+        } else {
+            cast += "No cast information available";
+        }
+        castView.setTag(cast);
     }
 
     private void setThumbnail(Drawable drawable)
