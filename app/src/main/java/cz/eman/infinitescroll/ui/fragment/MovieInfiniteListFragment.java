@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class MovieInfiniteListFragment extends ListFragment
     private MovieAdapter adapter;
     private int threshold = 0;
     private View loadProgressView;
-    private TextView descriptionView;
+    private RelativeLayout descriptionView;
     private TextView nomoreDataView;
     private TextView loadButtonView;
     private Integer scrollToIndex;
@@ -82,9 +83,10 @@ public class MovieInfiniteListFragment extends ListFragment
 
         View rootView = inflater.inflate(R.layout.fragment_movie_infinite_list, container, false);
 
-        descriptionView = (TextView) inflater.inflate(R.layout.view_information, null)
+        descriptionView = (RelativeLayout) inflater.inflate(R.layout.view_information, null)
                 .findViewById(R.id.header);
-        descriptionView.setText(Html.fromHtml(getString(R.string.about_info)));
+        ((TextView) descriptionView.findViewById(R.id.headerInfo))
+                .setText(Html.fromHtml(getString(R.string.about_info)));
 
         loadProgressView = inflater.inflate(R.layout.view_loadingprogress, null)
                 .findViewById(R.id.footer);
